@@ -27,8 +27,8 @@
     "@angular/platform-browser-dynamic": "^16.2.9",
     "@angular/router": "^16.2.9",
     "@ng-bootstrap/ng-bootstrap": "12.0.1",
-    "@popperjs/core": "^2.11.4",
     "@ngui/map": "0.30.3",
+    "@popperjs/core": "^2.11.4",
     "@types/googlemaps": "3.39.14",
     "arrive": "2.4.1",
     "bootstrap": "4.5.2",
@@ -38,10 +38,11 @@
     "express": "4.18.0",
     "jquery": "3.5.1",
     "moment": "2.29.1",
+    "ng-block-ui": "^4.0.1",
     "ngx-toastr": "17.0.2",
     "rxjs": "~7.5.0",
-    "zone.js": "~0.13.3",
-    "web-animations-js": "2.3.2"
+    "web-animations-js": "2.3.2",
+    "zone.js": "~0.13.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.6",
@@ -50,7 +51,7 @@
     "@angular/language-service": "16.2.9",
     "@types/jasmine": "~4.0.0",
     "@types/jasminewd2": "~2.0.10",
-    "@types/node": "^17.0.21",
+    "@types/node": "^20.8.4",
     "codelyzer": "6.0.2",
     "jasmine-core": "~4.4.0",
     "jasmine-spec-reporter": "~7.0.0",
