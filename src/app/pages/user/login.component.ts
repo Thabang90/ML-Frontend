@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
+import { ResetPasswordService } from 'app/shared/services/reset-password.service';
 
 @Component({
     selector: 'login-cmp',
@@ -14,12 +15,16 @@ import { finalize } from 'rxjs';
 export class LoginComponent implements OnInit{
 
     loginForm: FormGroup;
+    resetPasswordEmail: string;
+    isValidEmail: boolean;
+
     @BlockUI() blockUI: NgBlockUI;
     constructor(
         private fb: FormBuilder,
         private loginService: LoginService,
         private toastr: ToastrService,
-        private router: Router
+        private router: Router,
+        private resetPasswordService: ResetPasswordService
         ){}
 
     ngOnInit(){
@@ -42,5 +47,29 @@ export class LoginComponent implements OnInit{
                 this.toastr.error(err.message);
             }
         })
+    }
+
+    verifyEmail(event: any) {
+        const value = event;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,4}$/;
+        this.isValidEmail = emailPattern.test(value);
+        return this.isValidEmail;
+    }
+
+    sendResetLink() {
+        if(this.verifyEmail(this.resetPasswordEmail)) {
+            this.resetPasswordService.sendResetPasswordLink(this.resetPasswordEmail)
+            .subscribe({
+                next: (res) => {
+                    this.resetPasswordEmail = "";
+                    this.toastr.success(res.message);
+                    const buttonRef = document.getElementById('closeBtn');
+                    buttonRef?.click()
+                },
+                error: (err) => {
+                    this.toastr.error(err.message);
+                }
+            })
+        }
     }
 }
