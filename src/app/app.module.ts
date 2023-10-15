@@ -13,7 +13,6 @@ import { AppRoutes } from './app.routing';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { LocationStrategy, PathLocationStrategy } from "@angular/common";
-import { BlockUIModule } from "ng-block-ui";
 import { HttpClientModule } from "@angular/common/http";
 
 

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-
-declare interface TableData {
-    headerRow: string[];
-    dataRows: string[][];
-}
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserService } from 'app/shared/services/user.service';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'userscmp',
@@ -11,30 +11,76 @@ declare interface TableData {
 })
 
 export class UsersComponent implements OnInit{
-    public tableData1: TableData;
-    public tableData2: TableData;
+
+    @BlockUI() blockUI: NgBlockUI;
+    users: any;
+    userForm: FormGroup;
+
+    constructor(
+        private userService: UserService,
+        private toastr: ToastrService,
+        private fb: FormBuilder
+    ) {}
+
     ngOnInit(){
-        this.tableData1 = {
-            headerRow: [ 'ID', 'Name', 'Country', 'City', 'Salary'],
-            dataRows: [
-                ['1', 'Dakota Rice', 'Niger', 'Oud-Turnhout', '$36,738'],
-                ['2', 'Minerva Hooper', 'Curaçao', 'Sinaai-Waas', '$23,789'],
-                ['3', 'Sage Rodriguez', 'Netherlands', 'Baileux', '$56,142'],
-                ['4', 'Philip Chaney', 'Korea, South', 'Overland Park', '$38,735'],
-                ['5', 'Doris Greene', 'Malawi', 'Feldkirchen in Kärnten', '$63,542'],
-                ['6', 'Mason Porter', 'Chile', 'Gloucester', '$78,615']
-            ]
-        };
-        this.tableData2 = {
-            headerRow: [ 'ID', 'Name',  'Salary', 'Country', 'City' ],
-            dataRows: [
-                ['1', 'Dakota Rice','$36,738', 'Niger', 'Oud-Turnhout' ],
-                ['2', 'Minerva Hooper', '$23,789', 'Curaçao', 'Sinaai-Waas'],
-                ['3', 'Sage Rodriguez', '$56,142', 'Netherlands', 'Baileux' ],
-                ['4', 'Philip Chaney', '$38,735', 'Korea, South', 'Overland Park' ],
-                ['5', 'Doris Greene', '$63,542', 'Malawi', 'Feldkirchen in Kärnten', ],
-                ['6', 'Mason Porter', '$78,615', 'Chile', 'Gloucester' ]
-            ]
-        };
+        this.userForm = this.fb.group({
+            username: ['', Validators.required],
+            email: ['', Validators.required]
+        })
+        
+        this.getUsers();
+    }
+
+    getUsers() {
+        this.blockUI.start('Retrieving a list of users...');
+        this.userService.getUsers()
+        .pipe(finalize(() => this.blockUI.stop()))
+        .subscribe({
+          next: (users) => {
+            this.users = users;
+          },
+          error: (err) => {
+            this.toastr.error(err.message);
+          }
+        })
+    }
+
+    editUser(user: any){
+        this.userForm.patchValue(user);
+    }
+
+    updateUser() {
+        this.blockUI.start('Updating user...');
+        if(this.userForm.valid) {
+            this.userService.upsertUser(this.userForm.value)
+            .pipe(finalize(() => this.blockUI.stop()))
+            .subscribe({
+                next: (res) => {
+                    this.userForm.reset();
+                    var buttonRef = document.getElementById('closeBtn');
+                    buttonRef?.click();
+                    this.toastr.success('User has been updated!')
+                    this.getUsers();
+                },
+                error: (err) => {
+                    this.toastr.error(err.message);
+                }
+            })
+        }
+    }
+
+    deleteUser(userId: number) {
+        this.blockUI.start('Deleting user...');
+        this.userService.deleteUser(userId)
+        .pipe(finalize(() => this.blockUI.stop()))
+        .subscribe({
+            next:(res) => {
+                this.toastr.success(res.message);
+                this.getUsers();
+            },
+            error:(err) => {
+                this.toastr.error(err.message);
+            }
+        })
     }
 }

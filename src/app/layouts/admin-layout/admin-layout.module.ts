@@ -17,6 +17,7 @@ import { UpgradeComponent }         from '../../pages/upgrade/upgrade.component'
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BlockUIModule } from 'ng-block-ui';
 import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.component';
+import { UsersComponent } from 'app/pages/users/users.component';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.
     IconsComponent,
     MapsComponent,
     NotificationsComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    UsersComponent
   ]
 })
 

@@ -12,8 +12,4 @@ export class LoginService {
   login(user: any) {
     return this.http.post<any>(`${this.baseUrl}authenticate`, user);
   }
-
-  addUser(user: any){
-    return this.http.post<any>(`${this.baseUrl}upsert`, user);
-  }
 }

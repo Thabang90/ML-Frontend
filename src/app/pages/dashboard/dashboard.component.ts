@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DashboardService } from 'app/shared/services/dashboard.service';
+import { UserService } from 'app/shared/services/user.service';
 import { LoginService } from 'app/shared/services/login.service';
 import Chart from 'chart.js';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
+import { QuestionsService } from 'app/shared/services/questions.service';
 
 
 @Component({
@@ -20,17 +21,20 @@ export class DashboardComponent implements OnInit{
   users: any;
   userCount: number;
   isValidEmail: boolean;
+  questions: any;
+  questionCount: number;
   subject: string;
   question: string;
   constructor(
     private fb: FormBuilder,
-    private dashboardService: DashboardService,
+    private userService: UserService,
     private toastr: ToastrService,
-    private loginService: LoginService
+    private questionService: QuestionsService
     ) {}
 
     ngOnInit(){
       this.getUsers();
+      this.getQuestions();
 
       this.userForm = this.fb.group({
         username: ['', Validators.required],
@@ -40,7 +44,7 @@ export class DashboardComponent implements OnInit{
     }
 
     getUsers() {
-      this.dashboardService.getUsers().subscribe({
+      this.userService.getUsers().subscribe({
         next: (users) => {
           this.users = users;
           this.userCount = users.length;
@@ -60,14 +64,14 @@ export class DashboardComponent implements OnInit{
 
     addUser() {
       this.blockUI.start('Adding user...');
-      this.loginService.addUser(this.userForm.value)
+      this.userService.upsertUser(this.userForm.value)
       .pipe(finalize(() => this.blockUI.stop()))
       .subscribe({
         next: (res) => {
           this.userForm.reset();
           var buttonRef = document.getElementById('closeBtn');
           buttonRef.click();
-          this.toastr.success(res.message);
+          this.toastr.success('User has been added successfully');
           this.getUsers();
         },
         error: (err) => {
@@ -76,7 +80,37 @@ export class DashboardComponent implements OnInit{
       })
     }
 
-    addQuestion(){
-      
+    getQuestions() {
+      this.questionService.getQuestions().subscribe({
+        next: (res) => {
+          this.questions = res;
+          this.questionCount = res.length;
+        },
+        error: (err) => {
+          this.toastr.error(err.message);
+        }
+      })
     }
+
+    addQuestion() {
+      var questionModel = {
+        question: this.question,
+        subject: this.subject
+      };
+      this.blockUI.start('Adding question...');
+      this.questionService.addQuestion(questionModel)
+      .pipe(finalize(() => this.blockUI.stop()))
+      .subscribe({
+        next: (res) => {
+          var buttonRef = document.getElementById('closeBtn');
+          buttonRef.click();
+          this.toastr.success(res.message);
+          
+        },
+        error: (err) => {
+          this.toastr.error(err.message)
+        }
+      })
+    }
+
 }
