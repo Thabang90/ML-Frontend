@@ -9,6 +9,7 @@ import { MapsComponent } from '../../pages/maps/maps.component';
 import { NotificationsComponent } from '../../pages/notifications/notifications.component';
 import { UpgradeComponent } from '../../pages/upgrade/upgrade.component';
 import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.component';
+import { QuestionsComponent } from 'app/pages/questions/questions.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard',        component: DashboardComponent },
@@ -19,5 +20,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'maps',             component: MapsComponent },
     { path: 'notifications',    component: NotificationsComponent },
     { path: 'upgrade',          component: UpgradeComponent },
-    { path: 'reset-password',   component:ResetPasswordComponent}
+    { path: 'reset-password',   component:ResetPasswordComponent},
+    { path: 'questions',        component: QuestionsComponent  }
 ];

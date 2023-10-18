@@ -1,0 +1,76 @@
+<block-ui>
+    <div class="row" style="justify-content:center!important;">
+        <div class="col-md-12">
+            <div class="card card-plain">
+                <div class="card-header">
+                    <h4 class="card-title">Questions list</h4>
+                    <p class="card-category"></p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class=" text-primary">
+                                <th>
+                                    Question
+                                </th>
+                                <th>
+                                    Subject
+                                </th>
+                                <th >
+                                    Action
+                                </th>
+                            </thead>
+                            <tbody *ngFor="let question of questions">
+                                <tr>
+                                    <td>
+                                        {{ question.promptQuestion }}
+                                    </td>
+                                    <td>
+                                        {{ question.subject }}
+                                    </td>
+                                    <td>
+                                        <span class="fa fa-edit fa-lg text-danger" data-toggle="modal" data-target="#updateQuestionModal" (click)="editQuestion(question)"></span>
+                                        <span class="fa fa-trash fa-lg text-danger ml-4" (click)="deleteQuestion(question.id)"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="updateQuestionModal" tabindex="-1" role="dialog" aria-labelledby="updateQuestionLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateUserLabel">Update Question</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="questionsForm">
+                    <div>
+                        <div class="form-group">
+                            <label>*Question</label>
+                            <input type="text" formControlName="promptQuestion" class="form-control">
+                            <small *ngIf="questionsForm.controls['promptQuestion'].dirty && questionsForm.hasError('required', 'promptQuestion')" class="text-danger">*Question is required!</small>
+                        </div>
+                        <div class="form-group">
+                            <label>*Subject</label>
+                            <input type="email" formControlName="subject" class="form-control">
+                            <small *ngIf="questionsForm.controls['subject'].dirty && questionsForm.hasError('required', 'subject')" class="text-danger">*Subject is required!</small>
+                        </div>
+                    </div>   
+                </form>   
+            <div class="modal-footer">
+              <button type="button" id="closeBtn" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" [disabled]="questionsForm.invalid" class="btn btn-primary" (click)="updateQuestion()">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </block-ui>

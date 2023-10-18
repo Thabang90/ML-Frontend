@@ -16,4 +16,12 @@ export class QuestionsService {
   getQuestions() {
     return this.http.get<any>(`${this.baseUrl}questions`);
   }
+
+  deleteQuestion(questionId: number) {
+    return this.http.post<any>(`${this.baseUrl}delete/${questionId}`, {});
+  }
+
+  updateQuestion(question: any){
+    return this.http.post<any>(`${this.baseUrl}update`, question);
+  }
 }

@@ -18,19 +18,20 @@ export class DashboardComponent implements OnInit{
 
   @BlockUI() blockUI: NgBlockUI;
   userForm: FormGroup;
+  questionsForm: FormGroup;
   users: any;
   userCount: number;
   isValidEmail: boolean;
   questions: any;
   questionCount: number;
-  subject: string;
-  question: string;
+  //subject: string;
+  //question: string;
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private toastr: ToastrService,
     private questionService: QuestionsService
-    ) {}
+  ) {}
 
     ngOnInit(){
       this.getUsers();
@@ -40,6 +41,11 @@ export class DashboardComponent implements OnInit{
         username: ['', Validators.required],
         email: ['', Validators.required],
         isAdmin: [false]
+      });
+
+      this.questionsForm = this.fb.group({
+        question: ['', Validators.required],
+        subject: ['', Validators.required]
       })
     }
 
@@ -93,23 +99,33 @@ export class DashboardComponent implements OnInit{
     }
 
     addQuestion() {
-      var questionModel = {
-        question: this.question,
-        subject: this.subject
-      };
+      // var questionModel = {
+      //   question: this.question,
+      //   subject: this.subject
+      // };
       this.blockUI.start('Adding question...');
-      this.questionService.addQuestion(questionModel)
+      this.questionService.addQuestion(this.questionsForm.value)
       .pipe(finalize(() => this.blockUI.stop()))
       .subscribe({
         next: (res) => {
-          var buttonRef = document.getElementById('closeBtn');
+          this.questionsForm.reset();
+          var buttonRef = document.getElementById('closeQuestionBtn');
           buttonRef.click();
           this.toastr.success(res.message);
-          
+          this.getQuestions();
         },
         error: (err) => {
-          this.toastr.error(err.message)
+          this.toastr.error(err.message);
         }
+      //   next: (res) => {
+      //     var closeBtnRef = document.getElementById('closeBtn');
+      //     closeBtnRef.click();
+      //     this.toastr.success(res.message);
+          
+      //   },
+      //   error: (err) => {
+      //     this.toastr.error(err.message)
+      //   }
       })
     }
 
