@@ -8,7 +8,7 @@ app.listen(process.env.PORT || 8080);
 
 const fs = require('fs');
 
-const directoryPath = __dirname + '/dist'; // Replace with the path to your directory
+const directoryPath = __dirname; // Replace with the path to your directory
 
 fs.readdir(directoryPath, (err, files) => {
     if (err) {
