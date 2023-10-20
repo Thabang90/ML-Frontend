@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit{
 
     login() {
         this.blockUI.start('Logging In...')
-        this.loginService.login(this.loginForm.value)
+      /*   this.loginService.login(this.loginForm.value)
         .pipe(finalize(() => this.blockUI.stop()))
         .subscribe({
             next: (res) => {
@@ -46,7 +46,9 @@ export class LoginComponent implements OnInit{
             error: (err) => {
                 this.toastr.error(err.message);
             }
-        })
+        }) */
+        this.router.navigate(['/dashboard']);
+        this.blockUI.stop();
     }
 
     verifyEmail(event: any) {

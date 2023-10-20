@@ -14,7 +14,13 @@ export class QuestionsComponent implements OnInit{
 
     @BlockUI() blockUI: NgBlockUI;
     questionsForm: FormGroup;
-    questions: any;
+    questions = [
+        { promptQuestion: "What does CPU stand for?", subject: "IT Fundamentals" },
+        { promptQuestion: "What is a firewall used for in network security?", subject: "Network Security" },
+        { promptQuestion: "What programming language is commonly used for web development?", subject: "Web Development" },
+        { promptQuestion: "What is the purpose of DNS in networking?", subject: "Networking" },
+        { promptQuestion: "What does HTML stand for in web development?", subject: "Web Development" }
+      ];
 
     constructor(
         private fb: FormBuilder,
@@ -29,7 +35,7 @@ export class QuestionsComponent implements OnInit{
         subject: ['', Validators.required]
        }) 
 
-       this.getQuestions();
+       //this.getQuestions();
     }
 
 

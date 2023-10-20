@@ -1,162 +1,180 @@
 <block-ui>
-<div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-6">
-        <div class="card card-stats">
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-globe text-warning"></i>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="card card-stats">
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-5 col-md-4">
+                            <div class="icon-big text-center icon-warning">
+                                <i class="nc-icon nc-globe text-warning"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-category">Users</p>
-                            <p class="card-title">{{ userCount }}<p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <hr>
-                <div class="stats">
-                    <a href="/users"><i class="fa fa-user"></i> View Users</a>
-                    <a href="" data-toggle="modal" data-target="#forgotPasswordModal"><i class="fa fa-plus ml-5"></i> Add Users</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-4 col-md-6 col-sm-6">
-        <div class="card card-stats">
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-vector text-danger"></i>
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-category">Questions</p>
-                            <p class="card-title">{{questionCount}}<p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                    <a href="/questions"><i class="fa fa-question-circle"></i>View questions</a>
-                    <a href="" data-toggle="modal" data-target="#questionsModal"><i class="fa fa-plus ml-5"></i> Add Questions</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="card ">
-            <div class="card-header ">
-                <h5 class="card-title">Model Behavior</h5>
-                <!-- <p class="card-category">24 Hours performance</p> -->
-            </div>
-            <div class="card-body ">
-                <form>
-                    <div class="input-group no-border">
-                        <input type="text" value="" class="form-control" placeholder="Search question">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <i class="nc-icon nc-zoom-split"></i>
+                        <div class="col-7 col-md-8">
+                            <div class="numbers">
+                                <p class="card-category">Users</p>
+                                <p class="card-title">{{ userCount }}
+                                    <p>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="stats">
+                        <a href="/users"><i class="fa fa-user"></i> View Users</a>
+                        <a href="" data-toggle="modal" data-target="#forgotPasswordModal"><i class="fa fa-plus ml-5"></i> Add Users</a>
+                    </div>
+                </div>
             </div>
-            <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-history"></i> model 1
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="card card-stats">
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-5 col-md-4">
+                            <div class="icon-big text-center icon-warning">
+                                <i class="nc-icon nc-vector text-danger"></i>
+                            </div>
+                        </div>
+                        <div class="col-7 col-md-8">
+                            <div class="numbers">
+                                <p class="card-category">Questions</p>
+                                <p class="card-title">{{questionCount}}
+                                    <p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer ">
+                    <hr>
+                    <div class="stats">
+                        <a href="/questions"><i class="fa fa-question-circle"></i>View questions</a>
+                        <a href="" data-toggle="modal" data-target="#questionsModal"><i class="fa fa-plus ml-5"></i> Add Questions</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<!--Add users modal-->
-<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="addUserLabel">Add new user</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form [formGroup]="userForm">
-                <div>
-                    <div class="form-group">
-                            <label>*Username</label>
-                            <input type="text" formControlName="username" class="form-control">
-                            <small *ngIf="userForm.controls['username'].dirty && userForm.hasError('required', 'username')" class="text-danger">*Username is required!</small>
-                    </div>
-                    <div class="form-group">
-                            <label>*Email</label>
-                            <input type="email" formControlName="email" class="form-control" (ngModelChange)="verifyEmail($event)">
-                            <small *ngIf="userForm.controls['email'].dirty && userForm.hasError('required', 'email')" class="text-danger">*Email is required!</small>
-                            <small *ngIf="!isValidEmail && !userForm.hasError('required', 'email')" class="text-danger">*Email is invalid</small>
-                    </div>
-                    <div class="form-group">
-                        <label>Is Admin?</label>
-                        <br>
-                        <input type="checkbox" formControlName="isAdmin" class="form-group">
-                    </div>
-                </div>   
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="closeBtn" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="button" [disabled]="userForm.invalid" (click)="addUser()" class="btn btn-primary">Submit</button>
-        </div>
-    
-    </div>
-  </div>
-</div>
-<!--End-->
-
-<!--Add questions modal-->
-<div class="modal fade" id="questionsModal" tabindex="-1" role="dialog" aria-labelledby="questionsModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="questionsModalLabel">Add Question</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form [formGroup]="questionsForm">
-                <div class="mb-2">
-                    <div class="form-group">
-                        <label>*Question</label>
-                        <input type="text" formControlName="question" class="form-control">
-                        <small *ngIf="questionsForm.controls['question'].dirty && questionsForm.hasError('required', 'question')" class="text-danger">*Question is required!</small>
-                    </div>  
-                    <div class="form-group">
-                        <label>*Subject</label>
-                        <input type="text" formControlName="subject" class="form-control">
-                        <small *ngIf="questionsForm.controls['subject'].dirty && questionsForm.hasError('required', 'subject')" class="text-danger">*Question is required!</small>
-                    </div> 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <div class="card-header ">
+                    <h5 class="card-title">Model Behavior</h5>
+                    <!-- <p class="card-category">24 Hours performance</p> -->
                 </div>
-            </form>
-        </div>    
-        <div class="modal-footer">
-            <button type="button" id="closeQuestionBtn" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="button" [disabled]="questionsForm.invalid" (click)="addQuestion()" class="btn btn-primary">Submit</button>
+                <div class="card-body ">
+                    <form [formGroup]="modeSrc">
+                        <div class="input-group no-border">
+                            <input type="text" value="" class="form-control" placeholder="Search question" formControlName="src">
+
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <i class="nc-icon nc-zoom-split"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div *ngIf="!found && searchCliked" class="alert alert-success alert-dismissible fade show">
+                        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                          <i class="nc-icon nc-simple-remove"></i>
+                        </button>
+                        <span>
+                          <b> Success - </b> The question was not included in previous question papers.</span>
+                    </div>
+                    <div *ngIf="found && searchCliked" class="alert alert-danger alert-dismissible fade show">
+                        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                          <i class="nc-icon nc-simple-remove"></i>
+                        </button>
+                        <span>
+                          <b> Danger - </b> The question was included in previous question papers.</span>
+                    </div>
+                </div>
+                <div class="card-footer ">
+                    <button type="button" [disabled]="modeSrc.invalid" (click)="modeGen()" class="btn btn-primary">Submit</button>
+                    <hr>
+                    <div class="stats">
+                        <i class="fa fa-history"></i> model x5g1
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-  </div>
-</div>
-<!--End-->
+
+    <!--Add users modal-->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserLabel">Add new user</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="userForm">
+                        <div>
+                            <div class="form-group">
+                                <label>*Username</label>
+                                <input type="text" formControlName="username" class="form-control">
+                                <small *ngIf="userForm.controls['username'].dirty && userForm.hasError('required', 'username')" class="text-danger">*Username is required!</small>
+                            </div>
+                            <div class="form-group">
+                                <label>*Email</label>
+                                <input type="email" formControlName="email" class="form-control" (ngModelChange)="verifyEmail($event)">
+                                <small *ngIf="userForm.controls['email'].dirty && userForm.hasError('required', 'email')" class="text-danger">*Email is required!</small>
+                                <small *ngIf="!isValidEmail && !userForm.hasError('required', 'email')" class="text-danger">*Email is invalid</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Is Admin?</label>
+                                <br>
+                                <input type="checkbox" formControlName="isAdmin" class="form-group">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closeBtn" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" [disabled]="userForm.invalid" (click)="addUser()" class="btn btn-primary">Submit</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--End-->
+
+    <!--Add questions modal-->
+    <div class="modal fade" id="questionsModal" tabindex="-1" role="dialog" aria-labelledby="questionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="questionsModalLabel">Add Question</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="questionsForm">
+                        <div class="mb-2">
+                            <div class="form-group">
+                                <label>*Question</label>
+                                <input type="text" formControlName="question" class="form-control">
+                                <small *ngIf="questionsForm.controls['question'].dirty && questionsForm.hasError('required', 'question')" class="text-danger">*Question is required!</small>
+                            </div>
+                            <div class="form-group">
+                                <label>*Subject</label>
+                                <input type="text" formControlName="subject" class="form-control">
+                                <small *ngIf="questionsForm.controls['subject'].dirty && questionsForm.hasError('required', 'subject')" class="text-danger">*Question is required!</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closeQuestionBtn" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" [disabled]="questionsForm.invalid" (click)="addQuestion()" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End-->
 </block-ui>

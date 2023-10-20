@@ -13,7 +13,13 @@ import { finalize } from 'rxjs';
 export class UsersComponent implements OnInit{
 
     @BlockUI() blockUI: NgBlockUI;
-    users: any;
+    users = [
+        { username: "user1", email: "user1@example.com" },
+        { username: "user2", email: "user2@example.com" },
+        { username: "user3", email: "user3@example.com" },
+        { username: "user4", email: "user4@example.com" },
+        { username: "user5", email: "user5@example.com" }
+      ];
     userForm: FormGroup;
 
     constructor(
@@ -28,7 +34,7 @@ export class UsersComponent implements OnInit{
             email: ['', Validators.required]
         })
         
-        this.getUsers();
+        //this.getUsers();
     }
 
     getUsers() {

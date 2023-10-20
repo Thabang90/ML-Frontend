@@ -45,7 +45,7 @@ export class NavbarComponent implements OnInit{
               return this.listTitles[item].title;
           }
       }
-      return titlee;
+      return titlee.replace(/\//g, "");
     }
     sidebarToggle() {
         if (this.sidebarVisible === false) {
