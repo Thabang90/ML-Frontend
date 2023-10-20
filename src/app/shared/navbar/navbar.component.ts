@@ -35,7 +35,8 @@ export class NavbarComponent implements OnInit{
     getTitle(){
       var titlee = this.location.prepareExternalUrl(this.location.path());
       if(titlee.charAt(0) === '#'){
-          titlee = titlee.slice(1);
+        titlee = titlee.slice(1);
+        console.log(titlee)
       }
 
       
