@@ -93,6 +93,7 @@ export class QuestionsComponent implements OnInit {
     var buttonRef = document.getElementById("closeBtn");
     buttonRef?.click();
     this.toastr.success("User has been updated!");
+    this.blockUI.stop();
   }
 
   deleteQuestion(questionId: number) {
