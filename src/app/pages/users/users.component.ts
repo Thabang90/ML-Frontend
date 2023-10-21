@@ -75,6 +75,7 @@ export class UsersComponent implements OnInit {
     var buttonRef = document.getElementById("closeBtn");
     buttonRef?.click();
     this.toastr.success("User has been updated!");
+    this.blockUI.stop();
   }
 
   deleteUser(userId: number) {
@@ -92,6 +93,7 @@ export class UsersComponent implements OnInit {
         },
       });
   } */
+  this.toastr.success("User has been deleted!");
   this.blockUI.stop();
 }
 }

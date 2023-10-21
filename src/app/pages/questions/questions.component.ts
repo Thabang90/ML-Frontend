@@ -109,6 +109,7 @@ export class QuestionsComponent implements OnInit {
           this.toastr.error(err.message);
         },
       }); */
+      this.toastr.success("Question has been deleted!");
       this.blockUI.stop();
   }
 }
