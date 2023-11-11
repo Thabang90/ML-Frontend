@@ -216,6 +216,7 @@ export class DashboardComponent implements OnInit {
       this.found = true;
       this.QS=this.list.slice(1, 3);
       this.cdr.detectChanges();
+      console.log("ending");
     } else {
       this.found = false;
     }
