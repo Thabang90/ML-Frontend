@@ -7,6 +7,9 @@ import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { ToastrService } from "ngx-toastr";
 import { finalize } from "rxjs";
 import { QuestionsService } from "app/shared/services/questions.service";
+import { UploadfileService } from "app/shared/services/uploadfile.service";
+import { ChangeDetectorRef } from '@angular/core';
+
 
 @Component({
   selector: "dashboard-cmp",
@@ -16,7 +19,7 @@ export class DashboardComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
   userForm: FormGroup;
   questionsForm: FormGroup;
-  modeSrc:FormGroup;
+  modeSrc: FormGroup;
   users = [
     { username: "user1", email: "user1@example.com" },
     { username: "user2", email: "user2@example.com" },
@@ -46,16 +49,60 @@ export class DashboardComponent implements OnInit {
       subject: "Web Development",
     },
   ];
+
+  questionsPapers = [
+    { promptQuestion: "exam1", subject: "IT Fundamentals" },
+    {
+      promptQuestion: "exam12",
+      subject: "Network Security",
+    },
+    {
+      promptQuestion:
+        "exam16",
+      subject: "Web Development",
+    },
+    {
+      promptQuestion: "semester1",
+      subject: "Networking",
+    },
+    {
+      promptQuestion: "semester5",
+      subject: "Web Development",
+    },
+  ];
+  list= [
+    { year: 2008, questionNumber: 2, question: "How to configure Mesh network" },
+    { year: 2001, questionNumber: 5, question: "What is an IP address?" },
+    { year: 2015, questionNumber: 3, question: "Explain the concept of virtualization" },
+    { year: 1995, questionNumber: 1, question: "Define object-oriented programming" },
+    { year: 2022, questionNumber: 4, question: "Discuss the impact of artificial intelligence on society" },
+    { year: 2010, questionNumber: 7, question: "Describe the principles of database normalization" },
+    { year: 1999, questionNumber: 6, question: "What are the key features of Java programming language?" },
+    { year: 2018, questionNumber: 9, question: "How does blockchain technology work?" },
+    { year: 2005, questionNumber: 8, question: "Discuss the evolution of mobile communication technologies" },
+    { year: 2013, questionNumber: 10, question: "Explain the role of quantum mechanics in modern computing" },
+    { year: 2019, questionNumber: 12, question: "What are the advantages of cloud computing?" },
+    { year: 2003, questionNumber: 15, question: "How does TCP/IP protocol stack work?" },
+    { year: 2017, questionNumber: 13, question: "Discuss the principles of user interface design" },
+    { year: 2006, questionNumber: 16, question: "What is the significance of the Turing test in artificial intelligence?" },
+    { year: 2014, questionNumber: 18, question: "Explain the role of big data in business analytics" },
+    { year: 2009, questionNumber: 11, question: "Discuss the security challenges in modern computer networks" }
+  ];
   questionCount: number;
   found: boolean;
   searchCliked: boolean;
+  FILE:any;
+  QS:any;
+  name:string;
   //subject: string;
   //question: string;
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private toastr: ToastrService,
-    private questionService: QuestionsService
+    private questionService: QuestionsService,
+    private uploadfileService:UploadfileService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -74,7 +121,7 @@ export class DashboardComponent implements OnInit {
     });
 
     this.modeSrc = this.fb.group({
-      src: ["", Validators.required]
+      src: ["", Validators.required],
     });
   }
 
@@ -156,21 +203,40 @@ export class DashboardComponent implements OnInit {
     this.blockUI.stop();
   }
 
-  modeGen(){
-    const word = this.modeSrc.value.src.toLowerCase(); // Convert the search word to lowercase for case-insensitive search
-    this.searchCliked=true;
-    const result =  this.questions.filter((question) =>
+  modeGen() {
+    
+    let word = this.FILE.name.toLowerCase(); // Convert the search word to lowercase for case-insensitive search
+    this.searchCliked = true;
+    word = word.replace(/\.pdf$/, '');
+    const result = this.questionsPapers.filter((question) =>
       question.promptQuestion.toLowerCase().includes(word)
     );
 
-    if(result.length)
-    {
-
-     this.found=true;
-    }else{
-      this.found=false;
+    if (result.length) {
+      this.found = true;
+      this.QS=this.list.slice(1, 3);
+      this.cdr.detectChanges();
+    } else {
+      this.found = false;
     }
-    
+  }
 
+  uploadFile() {
+    
+    if (this.FILE) {
+      this.modeGen();
+    }
+  }
+  selectFileChange(event:any):void {
+    this.found = false;
+    this.searchCliked = false;
+    this.FILE = event.target.files[0];
+    if (this.FILE) {
+      console.log('Selected file name:', this.FILE.name);
+      this.found = true;
+    } else {
+      console.warn('No file selected.');
+      this.found = false;
+    }
   }
 }

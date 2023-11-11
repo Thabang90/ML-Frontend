@@ -29,7 +29,7 @@
         </div>
 
         <div class="col-lg-4 col-md-6 col-sm-6">
-            <div class="card card-stats">
+            <!--  <div class="card card-stats">
                 <div class="card-body ">
                     <div class="row">
                         <div class="col-5 col-md-4">
@@ -53,7 +53,7 @@
                         <a href="" data-toggle="modal" data-target="#questionsModal"><i class="fa fa-plus ml-5"></i> Add Questions</a>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="row">
@@ -65,12 +65,21 @@
                 </div>
                 <div class="card-body ">
                     <form [formGroup]="modeSrc">
-                        <div class="input-group no-border">
+                        <!--  <div class="input-group no-border">
                             <input type="text" value="" class="form-control" placeholder="Search question" formControlName="src">
 
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <i class="nc-icon nc-zoom-split"></i>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="input-group no-border">
+                            <input type="file" class="form-control" formControlName="fileUpload" accept=".pdf" (change)="selectFileChange($event)">
+
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <i class="nc-bulb-63"></i>
                                 </div>
                             </div>
                         </div>
@@ -80,18 +89,28 @@
                           <i class="nc-icon nc-simple-remove"></i>
                         </button>
                         <span>
-                          <b> Success - </b> The question was not included in previous question papers.</span>
+                          <b> Success - </b> The question paper does not include any previous question/s.</span>
                     </div>
                     <div *ngIf="found && searchCliked" class="alert alert-danger alert-dismissible fade show">
                         <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
                           <i class="nc-icon nc-simple-remove"></i>
                         </button>
                         <span>
-                          <b> Danger - </b> The question was included in previous question papers.</span>
+                          <b> Danger - </b> The question paper includes questions that were included in previous question paper/s.
+                          <br>
+                          <b> Question paper/s details</b>
+                            <br>
+                        <ul *ngFor="let question of this.QS">
+                            
+                            <li>Year - {{question.year}}</li>
+                            <li>Question  {{question.questionNumber}}</li>
+                            <li>{{question.question}}</li>
+                        </ul>
+                        </span>
                     </div>
                 </div>
                 <div class="card-footer ">
-                    <button type="button" [disabled]="modeSrc.invalid" (click)="modeGen()" class="btn btn-primary">Submit</button>
+                    <button type="button" (click)="uploadFile()" class="btn btn-primary">Submit</button>
                     <hr>
                     <div class="stats">
                         <i class="fa fa-history"></i> model x5g1
