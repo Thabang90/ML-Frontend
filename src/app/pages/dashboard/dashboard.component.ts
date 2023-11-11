@@ -94,6 +94,7 @@ export class DashboardComponent implements OnInit {
   FILE:any;
   QS:any;
   name:string;
+  PDFs:boolean=false;
   //subject: string;
   //question: string;
   constructor(
@@ -211,12 +212,21 @@ export class DashboardComponent implements OnInit {
     const result = this.questionsPapers.filter((question) =>
       question.promptQuestion.toLowerCase().includes(word)
     );
+    const index = this.questionsPapers.findIndex((question) =>
+    question.promptQuestion.toLowerCase().includes(word)
+  );
 
     if (result.length) {
       this.found = true;
-      this.QS=this.list.slice(1, 3);
+      if(word ==="exam12")
+      {
+        this.QS=this.list.slice(1, 3);
+      }else if(word ==="exam1"){
+        this.QS=this.list.slice(4, 7);
+      }
+      
       this.cdr.detectChanges();
-      console.log("ending");
+      console.log("ending",this.QS,word);
     } else {
       this.found = false;
     }
@@ -224,20 +234,40 @@ export class DashboardComponent implements OnInit {
 
   uploadFile() {
     
-    if (this.FILE) {
+    if (this.FILE && this.PDFs) {
       this.modeGen();
+    }
+    if(!this.PDFs)
+    {
+      //alert('Please upload a PDF file');
+      this.toastr.warning("Please upload a PDF file");
     }
   }
   selectFileChange(event:any):void {
     this.found = false;
     this.searchCliked = false;
     this.FILE = event.target.files[0];
-    if (this.FILE) {
-      console.log('Selected file name:', this.FILE.name);
+    this.validateFileType();
+    if (this.FILE &&  this.PDFs) {
+      console.log('Selected file name:', this.FILE);
       this.found = true;
     } else {
       console.warn('No file selected.');
+      if(!this.PDFs)
+      {
+        //alert('Please upload a PDF file');
+        this.toastr.warning("Please upload a PDF file");
+      }
       this.found = false;
+    }
+    
+  }
+
+  private validateFileType(): void {
+    if (this.FILE.type === 'application/pdf') {
+      this.PDFs=true
+    } else {
+      this.PDFs=false
     }
   }
 }
