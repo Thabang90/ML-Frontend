@@ -107,8 +107,8 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    /* this.getUsers();
-      this.getQuestions(); */
+    this.getUsers();
+    //this.getQuestions();
 
     this.userForm = this.fb.group({
       username: ["", Validators.required],
@@ -127,7 +127,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getUsers() {
-    /* this.userService.getUsers().subscribe({
+    this.userService.getUsers().subscribe({
         next: (users) => {
           this.users = users;
           this.userCount = users.length;
@@ -135,7 +135,7 @@ export class DashboardComponent implements OnInit {
         error: (err) => {
           this.toastr.error(err.message);
         }
-      }) */
+      });
   }
 
   verifyEmail(event: any) {
@@ -147,7 +147,7 @@ export class DashboardComponent implements OnInit {
 
   addUser() {
     this.blockUI.start("Adding user...");
-    /*  this.userService.upsertUser(this.userForm.value)
+    this.userService.upsertUser(this.userForm.value)
       .pipe(finalize(() => this.blockUI.stop()))
       .subscribe({
         next: (res) => {
@@ -156,15 +156,15 @@ export class DashboardComponent implements OnInit {
           buttonRef.click();
           this.toastr.success('User has been added successfully');
           this.getUsers();
+          this.blockUI.stop();
         },
         error: (err) => {
           this.toastr.error(err.message);
+          this.blockUI.stop();
         }
-      }) */
+      })
     var buttonRef = document.getElementById("closeBtn");
     buttonRef.click();
-    this.toastr.success("User has been added successfully");
-    this.blockUI.stop();
   }
 
   getQuestions() {

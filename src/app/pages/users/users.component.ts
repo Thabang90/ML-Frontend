@@ -11,14 +11,16 @@ import { finalize } from "rxjs";
 })
 export class UsersComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
-  users = [
-    { username: "user1", email: "user1@example.com" },
-    { username: "user2", email: "user2@example.com" },
-    { username: "user3", email: "user3@example.com" },
-    { username: "user4", email: "user4@example.com" },
-    { username: "user5", email: "user5@example.com" },
-  ];
+ 
+  // users = [
+  //   { username: "user1", email: "user1@example.com" },
+  //   { username: "user2", email: "user2@example.com" },
+  //   { username: "user3", email: "user3@example.com" },
+  //   { username: "user4", email: "user4@example.com" },
+  //   { username: "user5", email: "user5@example.com" },
+  // ];
   userForm: FormGroup;
+  users: any;
 
   constructor(
     private userService: UserService,
@@ -32,7 +34,7 @@ export class UsersComponent implements OnInit {
       email: ["", Validators.required],
     });
 
-    //this.getUsers();
+    this.getUsers();
   }
 
   getUsers() {
@@ -56,31 +58,27 @@ export class UsersComponent implements OnInit {
 
   updateUser() {
     this.blockUI.start("Updating user...");
-    /* if(this.userForm.valid) {
-            this.userService.upsertUser(this.userForm.value)
-            .pipe(finalize(() => this.blockUI.stop()))
-            .subscribe({
-                next: (res) => {
-                    this.userForm.reset();
-                    var buttonRef = document.getElementById('closeBtn');
-                    buttonRef?.click();
-                    this.toastr.success('User has been updated!')
-                    this.getUsers();
-                },
-                error: (err) => {
-                    this.toastr.error(err.message);
-                }
-            })
-        } */
-    var buttonRef = document.getElementById("closeBtn");
-    buttonRef?.click();
-    this.toastr.success("User has been updated!");
-    this.blockUI.stop();
+      if(this.userForm.valid) {
+        this.userService.upsertUser(this.userForm.value)
+        .pipe(finalize(() => this.blockUI.stop()))
+        .subscribe({
+          next: (res) => {
+            this.userForm.reset();
+            var buttonRef = document.getElementById('closeBtn');
+            buttonRef?.click();
+            this.toastr.success('User has been updated!')
+            this.getUsers();
+          },
+          error: (err) => {
+            this.toastr.error(err.message);
+          }
+        })
+      }
   }
 
   deleteUser(userId: number) {
     this.blockUI.start("Deleting user...");
-    /* this.userService
+    this.userService
       .deleteUser(userId)
       .pipe(finalize(() => this.blockUI.stop()))
       .subscribe({
@@ -92,8 +90,6 @@ export class UsersComponent implements OnInit {
           this.toastr.error(err.message);
         },
       });
-  } */
-  this.toastr.success("User has been deleted!");
-  this.blockUI.stop();
+  }
 }
-}
+

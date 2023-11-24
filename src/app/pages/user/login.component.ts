@@ -4,7 +4,7 @@ import { LoginService } from 'app/shared/services/login.service';
 import { Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ToastrService } from 'ngx-toastr';
-import { finalize } from 'rxjs';
+import { delay, finalize } from 'rxjs';
 import { ResetPasswordService } from 'app/shared/services/reset-password.service';
 
 @Component({
@@ -36,19 +36,21 @@ export class LoginComponent implements OnInit{
 
     login() {
         this.blockUI.start('Logging In...')
-      /*   this.loginService.login(this.loginForm.value)
+        this.loginService.login(this.loginForm.value)
         .pipe(finalize(() => this.blockUI.stop()))
         .subscribe({
             next: (res) => {
                 this.toastr.success(res.message);
-                this.router.navigate(['/dashboard']);
+                delay(3000);
+                this.blockUI.stop();
+                setTimeout(() => {
+                    this.router.navigate(['/dashboard']);
+                }, 2000);
             },
             error: (err) => {
-                this.toastr.error(err.message);
+                this.toastr.error(err.error.message);
             }
-        }) */
-        this.router.navigate(['/dashboard']);
-        this.blockUI.stop();
+        })
     }
 
     verifyEmail(event: any) {
@@ -60,18 +62,21 @@ export class LoginComponent implements OnInit{
 
     sendResetLink() {
         if(this.verifyEmail(this.resetPasswordEmail)) {
+            this.blockUI.start('Sending Reset Password link...');
             this.resetPasswordService.sendResetPasswordLink(this.resetPasswordEmail)
             .subscribe({
                 next: (res) => {
                     this.resetPasswordEmail = "";
                     this.toastr.success(res.message);
                     const buttonRef = document.getElementById('closeBtn');
+                    this.blockUI.stop();
                     buttonRef?.click()
                 },
                 error: (err) => {
-                    this.toastr.error(err.message);
+                    this.toastr.error(err.error.message);
+                    this.blockUI.stop();
                 }
-            })
+            });
         }
     }
 }
