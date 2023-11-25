@@ -15,7 +15,7 @@ export class MlService {
     // Define headers
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      // Add other headers as needed
+      'Access-Control-Allow-Origin': '*'
     });
 
     // Define options with headers
