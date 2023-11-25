@@ -1,7 +1,8 @@
 import { Component, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import { ROUTES } from '../../sidebar/sidebar.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Location} from '@angular/common';
+import { filter } from 'rxjs';
 
 @Component({
     selector: 'navbar-cmp',
@@ -14,15 +15,25 @@ export class NavbarComponent implements OnInit{
     private nativeElement: Node;
     private toggleButton;
     private sidebarVisible: boolean;
+    redirectToDash: boolean = false;
 
     public isCollapsed = true;
     @ViewChild("navbar-cmp", {static: false}) button;
 
-    constructor(location:Location, private renderer : Renderer2, private element : ElementRef, private router: Router) {
+    constructor(location:Location, private renderer : Renderer2, private element : ElementRef, private router: Router, private activatedRoute: ActivatedRoute) {
         this.location = location;
         this.nativeElement = element.nativeElement;
         this.sidebarVisible = false;
+
+        this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+          this.updateIconVisibility();
+        });
+    
     }
+
+  updateIconVisibility() {
+    this.redirectToDash = this.router.url.includes('/users');
+  }
 
     ngOnInit(){
         this.listTitles = ROUTES.filter(listTitle => listTitle);
@@ -93,5 +104,4 @@ export class NavbarComponent implements OnInit{
         }
 
       }
-
 }
