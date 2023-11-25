@@ -1,0 +1,11 @@
+{
+    "/api/user": {
+        "target": "http://thabang90-001-site1.atempurl.com",
+        "secure": false,
+        "changeOrigin": true
+    },
+    "/api_ml/": {
+        "target": "http://kops.pythonanywhere.com/",
+        "secure": false
+    }
+}

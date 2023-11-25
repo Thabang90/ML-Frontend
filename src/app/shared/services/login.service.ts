@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-
-  private baseUrl: string = "https://localhost:7189/api/user/";
+  
+  private baseUrl: string ="http://thabang90-001-site1.atempurl.com";
   constructor(private http: HttpClient) { }
 
   login(user: any) {
-    return this.http.post<any>(`${this.baseUrl}authenticate`, user);
-  }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    });
+    const options = { headers: headers };
+    return this.http.post<any>(`${this.baseUrl}/api/user/authenticate`, user,{ headers });
+  }
 }

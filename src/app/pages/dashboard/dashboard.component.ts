@@ -1,56 +1,137 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserService } from 'app/shared/services/user.service';
-import { LoginService } from 'app/shared/services/login.service';
-import Chart from 'chart.js';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { ToastrService } from 'ngx-toastr';
-import { finalize } from 'rxjs';
-import { QuestionsService } from 'app/shared/services/questions.service';
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UserService } from "app/shared/services/user.service";
+import { LoginService } from "app/shared/services/login.service";
+import Chart from "chart.js";
+import { BlockUI, NgBlockUI } from "ng-block-ui";
+import { ToastrService } from "ngx-toastr";
+import { delay, finalize } from "rxjs";
+import { QuestionsService } from "app/shared/services/questions.service";
+import { UploadfileService } from "app/shared/services/uploadfile.service";
+import { ChangeDetectorRef } from '@angular/core';
+import { MlService } from 'app/shared/services/ml.servicce';
 
 
 @Component({
-    selector: 'dashboard-cmp',
-    templateUrl: 'dashboard.component.html'
+  selector: "dashboard-cmp",
+  templateUrl: "dashboard.component.html",
 })
-
-export class DashboardComponent implements OnInit{
-
+export class DashboardComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
   userForm: FormGroup;
   questionsForm: FormGroup;
-  users: any;
+  modeSrc: FormGroup;
+  users = [
+    { username: "user1", email: "user1@example.com" },
+    { username: "user2", email: "user2@example.com" },
+    { username: "user3", email: "user3@example.com" },
+    { username: "user4", email: "user4@example.com" },
+    { username: "user5", email: "user5@example.com" },
+  ];
   userCount: number;
   isValidEmail: boolean;
-  questions: any;
+  questions = [
+    { promptQuestion: "What does CPU stand for?", subject: "IT Fundamentals" },
+    {
+      promptQuestion: "What is a firewall used for in network security?",
+      subject: "Network Security",
+    },
+    {
+      promptQuestion:
+        "What programming language is commonly used for web development?",
+      subject: "Web Development",
+    },
+    {
+      promptQuestion: "What is the purpose of DNS in networking?",
+      subject: "Networking",
+    },
+    {
+      promptQuestion: "What does HTML stand for in web development?",
+      subject: "Web Development",
+    },
+  ];
+loading=true;
+  questionsPapers = [
+    { promptQuestion: "exam1", subject: "IT Fundamentals" },
+    {
+      promptQuestion: "exam12",
+      subject: "Network Security",
+    },
+    {
+      promptQuestion:
+        "exam16",
+      subject: "Web Development",
+    },
+    {
+      promptQuestion: "semester1",
+      subject: "Networking",
+    },
+    {
+      promptQuestion: "semester5",
+      subject: "Web Development",
+    },
+  ];
+  list= [
+    { year: 2008, questionNumber: 2, question: "How to configure Mesh network" },
+    { year: 2001, questionNumber: 5, question: "What is an IP address?" },
+    { year: 2015, questionNumber: 3, question: "Explain the concept of virtualization" },
+    { year: 1995, questionNumber: 1, question: "Define object-oriented programming" },
+    { year: 2022, questionNumber: 4, question: "Discuss the impact of artificial intelligence on society" },
+    { year: 2010, questionNumber: 7, question: "Describe the principles of database normalization" },
+    { year: 1999, questionNumber: 6, question: "What are the key features of Java programming language?" },
+    { year: 2018, questionNumber: 9, question: "How does blockchain technology work?" },
+    { year: 2005, questionNumber: 8, question: "Discuss the evolution of mobile communication technologies" },
+    { year: 2013, questionNumber: 10, question: "Explain the role of quantum mechanics in modern computing" },
+    { year: 2019, questionNumber: 12, question: "What are the advantages of cloud computing?" },
+    { year: 2003, questionNumber: 15, question: "How does TCP/IP protocol stack work?" },
+    { year: 2017, questionNumber: 13, question: "Discuss the principles of user interface design" },
+    { year: 2006, questionNumber: 16, question: "What is the significance of the Turing test in artificial intelligence?" },
+    { year: 2014, questionNumber: 18, question: "Explain the role of big data in business analytics" },
+    { year: 2009, questionNumber: 11, question: "Discuss the security challenges in modern computer networks" }
+  ];
   questionCount: number;
+  found=false;
+  searchCliked=false;
+  FILE:any;
+  QS:any;
+  name:string;
+  PDFs:boolean=false;
+  router: any;
   //subject: string;
   //question: string;
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private toastr: ToastrService,
-    private questionService: QuestionsService
+    private questionService: QuestionsService,
+    private uploadfileService:UploadfileService,
+    private cdr: ChangeDetectorRef,
+    private mlService: MlService,
+
   ) {}
 
-    ngOnInit(){
-      this.getUsers();
-      this.getQuestions();
+  ngOnInit() {
+    this.getUsers();
+    //this.getQuestions();
 
-      this.userForm = this.fb.group({
-        username: ['', Validators.required],
-        email: ['', Validators.required],
-        isAdmin: [false]
-      });
+    this.userForm = this.fb.group({
+      username: ["", Validators.required],
+      email: ["", Validators.required],
+      isAdmin: [false],
+    });
 
-      this.questionsForm = this.fb.group({
-        question: ['', Validators.required],
-        subject: ['', Validators.required]
-      })
-    }
+    this.questionsForm = this.fb.group({
+      question: ["", Validators.required],
+      subject: ["", Validators.required],
+    });
 
-    getUsers() {
-      this.userService.getUsers().subscribe({
+    this.modeSrc = this.fb.group({
+      src: ["", Validators.required],
+    });
+  }
+
+  getUsers() {
+    this.userService.getUsers().subscribe({
         next: (users) => {
           this.users = users;
           this.userCount = users.length;
@@ -58,19 +139,19 @@ export class DashboardComponent implements OnInit{
         error: (err) => {
           this.toastr.error(err.message);
         }
-      })
-    }
+      });
+  }
 
-    verifyEmail(event: any) {
-      const value = event;
-      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,4}$/;
-      this.isValidEmail = emailPattern.test(value);
-      return this.isValidEmail;
-    }
+  verifyEmail(event: any) {
+    const value = event;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,4}$/;
+    this.isValidEmail = emailPattern.test(value);
+    return this.isValidEmail;
+  }
 
-    addUser() {
-      this.blockUI.start('Adding user...');
-      this.userService.upsertUser(this.userForm.value)
+  addUser() {
+    this.blockUI.start("Adding user...");
+    this.userService.upsertUser(this.userForm.value)
       .pipe(finalize(() => this.blockUI.stop()))
       .subscribe({
         next: (res) => {
@@ -79,15 +160,19 @@ export class DashboardComponent implements OnInit{
           buttonRef.click();
           this.toastr.success('User has been added successfully');
           this.getUsers();
+          this.blockUI.stop();
         },
         error: (err) => {
           this.toastr.error(err.message);
+          this.blockUI.stop();
         }
       })
-    }
+    var buttonRef = document.getElementById("closeBtn");
+    buttonRef.click();
+  }
 
-    getQuestions() {
-      this.questionService.getQuestions().subscribe({
+  getQuestions() {
+    /* this.questionService.getQuestions().subscribe({
         next: (res) => {
           this.questions = res;
           this.questionCount = res.length;
@@ -95,16 +180,13 @@ export class DashboardComponent implements OnInit{
         error: (err) => {
           this.toastr.error(err.message);
         }
-      })
-    }
+      }) */
+  }
 
-    addQuestion() {
-      // var questionModel = {
-      //   question: this.question,
-      //   subject: this.subject
-      // };
-      this.blockUI.start('Adding question...');
-      this.questionService.addQuestion(this.questionsForm.value)
+  addQuestion() {
+    this.blockUI.start("Adding question...");
+    var buttonRef = document.getElementById("closeQuestionBtn");
+    /* this.questionService.addQuestion(this.questionsForm.value)
       .pipe(finalize(() => this.blockUI.stop()))
       .subscribe({
         next: (res) => {
@@ -117,16 +199,86 @@ export class DashboardComponent implements OnInit{
         error: (err) => {
           this.toastr.error(err.message);
         }
-      //   next: (res) => {
-      //     var closeBtnRef = document.getElementById('closeBtn');
-      //     closeBtnRef.click();
-      //     this.toastr.success(res.message);
-          
-      //   },
-      //   error: (err) => {
-      //     this.toastr.error(err.message)
-      //   }
-      })
-    }
+     
+      }) */
 
+    //this.questions.push({ promptQuestion: this.questionsForm.value.question, subject: this.questionsForm.value.subject });
+    buttonRef.click();
+    this.toastr.success("successfully added new question");
+    this.blockUI.stop();
+  }
+
+  modeGen() {
+    
+    let word = this.FILE.name.toLowerCase(); // Convert the search word to lowercase for case-insensitive search
+    this.searchCliked = true;
+    word = word.replace(/\.pdf$/, '');
+    const result = this.questionsPapers.filter((question) =>
+      question.promptQuestion.toLowerCase().includes(word)
+    );
+    const index = this.questionsPapers.findIndex((question) =>
+    question.promptQuestion.toLowerCase().includes(word)
+  );
+
+    if (result.length) {
+      this.found = true;
+      if(word ==="exam12")
+      {
+        this.QS=this.list.slice(1, 3);
+      }else if(word ==="exam1"){
+        this.QS=this.list.slice(4, 7);
+      }
+      
+      this.cdr.detectChanges();
+      console.log("ending",this.QS,word);
+    } else {
+      this.found = false;
+
+    }
+  }
+
+  uploadFile() {
+    this.searchCliked = true;
+    this.blockUI.start('checking questions...heavy duty be patient')
+    this.mlService.uploadFile(this.FILE )
+    .pipe(finalize(() => this.blockUI.stop()))
+    .subscribe({
+        next: (res) => {
+           
+         
+          if(res.questions.length)
+          {
+            console.log(res.questions);
+            this.found = true;
+            this.QS=res.questions;
+            console.log(this.QS,this.found,this.searchCliked);
+          }else{
+            this.found = false;
+          }
+          this.blockUI.stop();
+          this.loading=false;
+        },
+        error: (err) => {
+            this.toastr.error(err.error.message);
+            this.loading=false;
+        }
+    })
+
+    
+  }
+  selectFileChange(event:any):void {
+  
+    this.FILE = event.target.files[0];
+    this.validateFileType();
+  
+    
+  }
+
+  private validateFileType(): void {
+    if (this.FILE.type === 'application/pdf') {
+      this.PDFs=true
+    } else {
+      this.PDFs=false
+    }
+  }
 }
