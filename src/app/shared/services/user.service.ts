@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -11,14 +11,29 @@ export class UserService {
 
   
   upsertUser(user: any){
-    return this.http.post<any>(`${this.baseUrl}upsert`, user);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    });
+    const options = { headers: headers };
+    return this.http.post<any>(`${this.baseUrl}upsert`, user, {headers});
   }
 
   getUsers(){
-    return this.http.get<any>(`${this.baseUrl}users`);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    });
+    const options = { headers: headers };
+    return this.http.get<any>(`${this.baseUrl}users`, {headers});
   }
 
   deleteUser(userId: number) {
-    return this.http.post<any>(`${this.baseUrl}delete/${userId}`, {});
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    });
+    const options = { headers: headers };
+    return this.http.post<any>(`${this.baseUrl}delete/${userId}`, {headers});
   }
 }

@@ -6,7 +6,6 @@
     },
     "/api_ml/": {
         "target": "http://kops.pythonanywhere.com/",
-        "secure": false,
-
+        "secure": false
     }
 }
