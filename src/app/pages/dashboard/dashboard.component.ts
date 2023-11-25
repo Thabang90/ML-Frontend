@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit {
       subject: "Web Development",
     },
   ];
-
+loading=true;
   questionsPapers = [
     { promptQuestion: "exam1", subject: "IT Fundamentals" },
     {
@@ -239,14 +239,7 @@ export class DashboardComponent implements OnInit {
 
   uploadFile() {
     this.searchCliked = true;
-    /* if (this.FILE && this.PDFs) {
-      this.modeGen();
-    }
-    if(!this.PDFs)
-    {
-      //alert('Please upload a PDF file');
-      this.toastr.warning("Please upload a PDF file");
-    } */
+    this.loading=true;
     this.blockUI.start('checking questions...heavy duty be patient')
     this.mlService.uploadFile(this.FILE )
     .pipe(finalize(() => this.blockUI.stop()))
@@ -264,10 +257,11 @@ export class DashboardComponent implements OnInit {
             this.found = false;
           }
           this.blockUI.stop();
-           
+          this.loading=false;
         },
         error: (err) => {
             this.toastr.error(err.error.message);
+            this.loading=false;
         }
     })
 
@@ -280,7 +274,7 @@ export class DashboardComponent implements OnInit {
     this.validateFileType();
     if (this.FILE &&  this.PDFs) {
       console.log('Selected file name:', this.FILE);
-      this.found = true;
+      
     } else {
       console.warn('No file selected.');
       if(!this.PDFs)
