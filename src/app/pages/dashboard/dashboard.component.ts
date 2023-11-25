@@ -90,8 +90,8 @@ loading=true;
     { year: 2009, questionNumber: 11, question: "Discuss the security challenges in modern computer networks" }
   ];
   questionCount: number;
-  found: boolean;
-  searchCliked: boolean;
+  found=false;
+  searchCliked=false;
   FILE:any;
   QS:any;
   name:string;
@@ -239,7 +239,6 @@ loading=true;
 
   uploadFile() {
     this.searchCliked = true;
-    this.loading=true;
     this.blockUI.start('checking questions...heavy duty be patient')
     this.mlService.uploadFile(this.FILE )
     .pipe(finalize(() => this.blockUI.stop()))
@@ -268,22 +267,10 @@ loading=true;
     
   }
   selectFileChange(event:any):void {
-    this.found = false;
-    this.searchCliked = false;
+  
     this.FILE = event.target.files[0];
     this.validateFileType();
-    if (this.FILE &&  this.PDFs) {
-      console.log('Selected file name:', this.FILE);
-      
-    } else {
-      console.warn('No file selected.');
-      if(!this.PDFs)
-      {
-        //alert('Please upload a PDF file');
-        this.toastr.warning("Please upload a PDF file");
-      }
-      this.found = false;
-    }
+  
     
   }
 
