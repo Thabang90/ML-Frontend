@@ -238,28 +238,40 @@ export class DashboardComponent implements OnInit {
   }
 
   uploadFile() {
-    
-    if (this.FILE && this.PDFs) {
+    this.searchCliked = true;
+    /* if (this.FILE && this.PDFs) {
       this.modeGen();
     }
     if(!this.PDFs)
     {
       //alert('Please upload a PDF file');
       this.toastr.warning("Please upload a PDF file");
-    }
-    this.blockUI.start('checking questions...')
+    } */
+    this.blockUI.start('checking questions...heavy duty be patient')
     this.mlService.uploadFile(this.FILE )
     .pipe(finalize(() => this.blockUI.stop()))
     .subscribe({
         next: (res) => {
            
-            this.blockUI.stop();
+         
+          if(res.questions.length)
+          {
+            console.log(res.questions);
+            this.found = true;
+            this.QS=res.questions;
+            console.log(this.QS,this.found,this.searchCliked);
+          }else{
+            this.found = false;
+          }
+          this.blockUI.stop();
            
         },
         error: (err) => {
             this.toastr.error(err.error.message);
         }
     })
+
+    
   }
   selectFileChange(event:any):void {
     this.found = false;
