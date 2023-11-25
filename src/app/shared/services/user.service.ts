@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class UserService {
 
-  private baseUrl: string ="/api/user/";
+  private baseUrl: string ="http://thabang90-001-site1.atempurl.com/api/User/";
   constructor(private http: HttpClient) { }
 
   
