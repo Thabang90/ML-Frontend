@@ -32,6 +32,6 @@ export class MlService {
     const headers = new HttpHeaders();
     // headers.append('Authorization', 'Bearer your_token'); // Include authentication headers if needed
 
-    return this.http.post<any>(this.baseUrl, formData, { headers });
+    return this.http.post<any>(`${this.baseUrl}extract-questions`, formData, { headers });
   }
 }
