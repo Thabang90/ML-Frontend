@@ -10,6 +10,6 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   login(user: any) {
-    return this.http.post<any>(`${this.baseUrl}authenticate`, user);
-  }
+    return this.http.post<any>(`${this.baseUrl}authenticate`, user);
+  }
 }

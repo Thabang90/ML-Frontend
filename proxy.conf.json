@@ -1,7 +1,7 @@
 {
     "/api/user": {
-      "target": "http://thabang90-001-site1.atempurl.com",
-      "secure": false,
-      "changeOrigin": true
+        "target": "http://thabang90-001-site1.atempurl.com",
+        "secure": false,
+        "changeOrigin": true
     }
 }
