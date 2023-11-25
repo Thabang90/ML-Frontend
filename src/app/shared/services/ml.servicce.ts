@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class MlService {
   
-  private baseUrl: string = "/api_ml/";
+  private baseUrl: string = "http://kops.pythonanywhere.com/";
 
   constructor(private http: HttpClient) { }
 
