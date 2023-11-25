@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class MlService {
   
-  private baseUrl: string = "http://kops.pythonanywhere.com//extract-questions";
+  private baseUrl: string = "/api_ml/";
 
   constructor(private http: HttpClient) { }
 
@@ -22,7 +22,7 @@ export class MlService {
     const options = { headers: headers };
 
     // Make HTTP request with headers
-    return this.http.post<any>(`${this.baseUrl}`, user, options);
+    return this.http.post<any>(`${this.baseUrl}extract-questions`, user, options);
   }
 
   uploadFile(file: File): Observable<any> {
