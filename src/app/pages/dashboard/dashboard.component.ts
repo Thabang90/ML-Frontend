@@ -229,6 +229,7 @@ export class DashboardComponent implements OnInit {
       console.log("ending",this.QS,word);
     } else {
       this.found = false;
+      
     }
   }
 
