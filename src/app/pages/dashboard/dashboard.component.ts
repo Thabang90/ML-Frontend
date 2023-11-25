@@ -5,10 +5,11 @@ import { LoginService } from "app/shared/services/login.service";
 import Chart from "chart.js";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { ToastrService } from "ngx-toastr";
-import { finalize } from "rxjs";
+import { delay, finalize } from "rxjs";
 import { QuestionsService } from "app/shared/services/questions.service";
 import { UploadfileService } from "app/shared/services/uploadfile.service";
 import { ChangeDetectorRef } from '@angular/core';
+import { MlService } from 'app/shared/services/ml.servicce';
 
 
 @Component({
@@ -95,6 +96,7 @@ export class DashboardComponent implements OnInit {
   QS:any;
   name:string;
   PDFs:boolean=false;
+  router: any;
   //subject: string;
   //question: string;
   constructor(
@@ -103,7 +105,9 @@ export class DashboardComponent implements OnInit {
     private toastr: ToastrService,
     private questionService: QuestionsService,
     private uploadfileService:UploadfileService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private mlService: MlService,
+
   ) {}
 
   ngOnInit() {
@@ -229,7 +233,7 @@ export class DashboardComponent implements OnInit {
       console.log("ending",this.QS,word);
     } else {
       this.found = false;
-      
+
     }
   }
 
@@ -243,6 +247,22 @@ export class DashboardComponent implements OnInit {
       //alert('Please upload a PDF file');
       this.toastr.warning("Please upload a PDF file");
     }
+
+    this.mlService.uploadFile(this.FILE )
+    .pipe(finalize(() => this.blockUI.stop()))
+    .subscribe({
+        next: (res) => {
+            this.toastr.success(res.message);
+            delay(3000);
+            this.blockUI.stop();
+            setTimeout(() => {
+                this.router.navigate(['/dashboard']);
+            }, 2000);
+        },
+        error: (err) => {
+            this.toastr.error(err.error.message);
+        }
+    })
   }
   selectFileChange(event:any):void {
     this.found = false;
