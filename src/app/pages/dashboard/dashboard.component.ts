@@ -247,17 +247,14 @@ export class DashboardComponent implements OnInit {
       //alert('Please upload a PDF file');
       this.toastr.warning("Please upload a PDF file");
     }
-
+    this.blockUI.start('checking questions...')
     this.mlService.uploadFile(this.FILE )
     .pipe(finalize(() => this.blockUI.stop()))
     .subscribe({
         next: (res) => {
-            this.toastr.success(res.message);
-            delay(3000);
+           
             this.blockUI.stop();
-            setTimeout(() => {
-                this.router.navigate(['/dashboard']);
-            }, 2000);
+           
         },
         error: (err) => {
             this.toastr.error(err.error.message);
