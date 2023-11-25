@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http'
 })
 export class LoginService {
   
-  private baseUrl: string ="http://thabang90-001-site1.atempurl.com/api/user/";
+  private baseUrl: string ="/api/user/";
   constructor(private http: HttpClient) { }
 
   login(user: any) {
